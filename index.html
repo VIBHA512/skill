@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SkillBridge AI</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+</head>
+
+<body>
+
+<div class="navbar">
+  <h2>SkillBridge AI</h2>
+  <p>AI Career Assistant</p>
+</div>
+
+<!-- 🎓 USER TYPE -->
+<div class="top-tabs">
+  <button class="userTab active" onclick="switchUser('fresher')">🎓 Fresher</button>
+  <button class="userTab" onclick="switchUser('experienced')">💼 Experienced</button>
+</div>
+
+<!-- 🔥 NAVIGATION -->
+<div class="nav-tabs">
+  <button onclick="showSection('analyze')" class="active">Analyze</button>
+  <button onclick="showSection('recommend')">Recommend</button>
+  <button onclick="showSection('dashboard')">Dashboard</button>
+  <button onclick="showSection('chat')">Chatbot</button>
+</div>
+
+<div class="container">
+
+  <!-- ANALYZE -->
+  <div id="analyze" class="section active">
+
+    <select id="career"></select>
+
+    <input type="file" id="resumeUpload">
+    <button onclick="extractSkills()">Extract Resume Skills</button>
+
+    <input id="skills" placeholder="python: intermediate, sql: beginner">
+
+    <input id="softSkills" placeholder="communication, teamwork">
+
+    <button onclick="analyze()">Analyze Skill Gap</button>
+
+  </div>
+
+  <!-- RECOMMEND -->
+  <div id="recommend" class="section">
+    <button onclick="recommendCareer()">Best Career</button>
+    <button onclick="suggestCareers()">Suggest Careers</button>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashboard" class="section">
+    <button onclick="showDashboard()">View Progress</button>
+  </div>
+
+  <!-- CHAT -->
+  <div id="chat" class="section">
+    <div id="chatbox"></div>
+    <input id="chatInput">
+    <button onclick="sendMessage()">Send</button>
+  </div>
+
+  <!-- OUTPUT -->
+  <div id="output" class="card"></div>
+
+</div>
+
+<script src="data.js"></script>
+<script src="script.js"></script>
+<script src="dashboard.js"></script>
+<script src="ai.js"></script>
+
+</body>
+</html>
