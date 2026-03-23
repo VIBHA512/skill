@@ -1,81 +1,81 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>SkillBridge AI</title>
-
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillBridge AI | Professional Gap Analysis</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-
 <body>
+    <div class="background-glow"></div>
+    
+    <nav class="navbar">
+        <div class="logo">SkillBridge<span>AI</span></div>
+        <div class="nav-links">
+            <a href="#">Dashboard</a>
+            <a href="#">Trending</a>
+            <button class="btn-primary">Get Started</button>
+        </div>
+    </nav>
 
-<div class="navbar">
-  <h2>SkillBridge AI</h2>
-  <p>AI Career Assistant</p>
-</div>
+    <main class="container">
+        <header class="hero-section">
+            <h1>Bridge Your <span class="gradient-text">Career Gap</span></h1>
+            <p>AI-driven skill analysis tailored to your professional level.</p>
+        </header>
 
-<!-- 🎓 USER TYPE -->
-<div class="top-tabs">
-  <button class="userTab active" onclick="switchUser('fresher')">🎓 Fresher</button>
-  <button class="userTab" onclick="switchUser('experienced')">💼 Experienced</button>
-</div>
+        <div class="tabs-container">
+            <div class="tabs-wrapper">
+                <input type="radio" name="level" id="fresher" checked>
+                <input type="radio" name="level" id="experienced">
+                
+                <label for="fresher" class="tab-label">
+                    <i class="fas fa-graduation-cap"></i> Fresher
+                </label>
+                <label for="experienced" class="tab-label">
+                    <i class="fas fa-briefcase"></i> Experienced
+                </label>
+                
+                <div class="tab-slider"></div>
+            </div>
+        </div>
 
-<!-- 🔥 NAVIGATION -->
-<div class="nav-tabs">
-  <button onclick="showSection('analyze')" class="active">Analyze</button>
-  <button onclick="showSection('recommend')">Recommend</button>
-  <button onclick="showSection('dashboard')">Dashboard</button>
-  <button onclick="showSection('chat')">Chatbot</button>
-</div>
+        <div class="analysis-card">
+            <div id="form-content">
+                <div class="input-group">
+                    <label>Target Career Path</label>
+                    <select id="targetCareer">
+                        <option>AI Engineer</option>
+                        <option>Data Scientist</option>
+                        <option>Full Stack Developer</option>
+                        <option>Cloud Architect</option>
+                    </select>
+                </div>
 
-<div class="container">
+                <div id="experienced-fields" class="hidden-fields">
+                    <div class="input-group">
+                        <label>Current Experience (Years): <span id="expValue">3</span></label>
+                        <input type="range" min="1" max="20" value="3" class="slider" id="expRange">
+                    </div>
+                </div>
 
-  <!-- ANALYZE -->
-  <div id="analyze" class="section active">
+                <div class="input-group">
+                    <label>Upload Resume (AI Extraction)</label>
+                    <div class="upload-area" id="dropZone">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Drag & drop or click to browse</p>
+                    </div>
+                </div>
 
-    <select id="career"></select>
+                <button class="cta-button" onclick="analyzeSkills()">
+                    <span>Analyze Skill Gap</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </main>
 
-    <input type="file" id="resumeUpload">
-    <button onclick="extractSkills()">Extract Resume Skills</button>
-
-    <input id="skills" placeholder="python: intermediate, sql: beginner">
-
-    <input id="softSkills" placeholder="communication, teamwork">
-
-    <button onclick="analyze()">Analyze Skill Gap</button>
-
-  </div>
-
-  <!-- RECOMMEND -->
-  <div id="recommend" class="section">
-    <button onclick="recommendCareer()">Best Career</button>
-    <button onclick="suggestCareers()">Suggest Careers</button>
-  </div>
-
-  <!-- DASHBOARD -->
-  <div id="dashboard" class="section">
-    <button onclick="showDashboard()">View Progress</button>
-  </div>
-
-  <!-- CHAT -->
-  <div id="chat" class="section">
-    <div id="chatbox"></div>
-    <input id="chatInput">
-    <button onclick="sendMessage()">Send</button>
-  </div>
-
-  <!-- OUTPUT -->
-  <div id="output" class="card"></div>
-
-</div>
-
-<script src="data.js"></script>
-<script src="script.js"></script>
-<script src="dashboard.js"></script>
-<script src="ai.js"></script>
-
+    <script src="script.js"></script>
 </body>
 </html>
