@@ -1,97 +1,41 @@
-let userType = "fresher";
+document.addEventListener('DOMContentLoaded', () => {
+    const fresherRadio = document.getElementById('fresher');
+    const expRadio = document.getElementById('experienced');
+    const expFields = document.getElementById('experienced-fields');
+    const expSlider = document.getElementById('expRange');
+    const expValue = document.getElementById('expValue');
 
-function switchUser(type){
-  userType = type;
+    // Toggle Experienced UI
+    const updateUI = () => {
+        if (expRadio.checked) {
+            expFields.classList.add('show-fields');
+        } else {
+            expFields.classList.remove('show-fields');
+        }
+    };
 
-  document.querySelectorAll(".userTab").forEach(btn=>{
-    btn.classList.remove("active");
-  });
+    fresherRadio.addEventListener('change', updateUI);
+    expRadio.addEventListener('change', updateUI);
 
-  if(type==="fresher"){
-    document.querySelectorAll(".userTab")[0].classList.add("active");
-  } else {
-    document.querySelectorAll(".userTab")[1].classList.add("active");
-  }
-}
+    // Update Experience Label
+    expSlider.addEventListener('input', (e) => {
+        expValue.textContent = e.target.value;
+    });
+});
 
-// 🔥 NAVIGATION
-function showSection(id){
-  document.querySelectorAll(".section").forEach(sec=>{
-    sec.classList.remove("active");
-  });
+function analyzeSkills() {
+    const isExperienced = document.getElementById('experienced').checked;
+    const target = document.getElementById('targetCareer').value;
+    const years = isExperienced ? document.getElementById('expRange').value : 0;
 
-  document.getElementById(id).classList.add("active");
-}
-
-// 🎯 ANALYZE
-function analyze(){
-
-  let career = document.getElementById("career").value;
-  let input = document.getElementById("skills").value;
-
-  let userSkills = {};
-
-  input.split(",").forEach(s=>{
-    let [skill, level] = s.split(":");
-    skill = normalizeSkill(skill);
-    level = (level||"intermediate").trim();
-    userSkills[skill] = level;
-  });
-
-  let score = calculateMatch(userSkills, careerSkills[career], userType);
-
-  let result = `
-  <h2>${career}</h2>
-  <h3>Score: ${score}%</h3>
-
-  <button onclick="showDashboard()">📊 View Dashboard</button>
-  <button onclick="suggestCareers()">🚀 Explore Careers</button>
-  `;
-
-  document.getElementById("output").innerHTML = result;
-}
-
-// 🚀 RECOMMEND
-function recommendCareer(){
-
-  let input = document.getElementById("skills").value;
-
-  let userSkills = {};
-
-  input.split(",").forEach(s=>{
-    let [skill, level] = s.split(":");
-    skill = normalizeSkill(skill);
-    userSkills[skill] = level||"intermediate";
-  });
-
-  let best = "";
-  let max = 0;
-
-  for(let c in careerSkills){
-    let score = calculateMatch(userSkills, careerSkills[c], userType);
-    if(score>max){
-      max=score;
-      best=c;
+    // Logic for personalized analysis
+    let analysisMsg = "";
+    if (!isExperienced) {
+        analysisMsg = `Analyzing foundational skills for entry-level ${target}. Focus: Projects & Core Concepts.`;
+    } else {
+        analysisMsg = `Analyzing advanced leadership and technical skills for ${target} with ${years} years of exp. Focus: System Design & Strategy.`;
     }
-  }
 
-  document.getElementById("output").innerHTML = `<h2>${best} (${max}%)</h2>`;
+    alert(analysisMsg);
+    // Here you would call your AI endpoint (like ai.js in your repo)
 }
-
-// 💡 SUGGEST
-function suggestCareers(){
-  document.getElementById("output").innerHTML = "Suggestions loading...";
-}
-
-// 🔥 LOAD
-window.onload = function(){
-
-  let dropdown = document.getElementById("career");
-
-  for(let c in careerSkills){
-    let opt = document.createElement("option");
-    opt.value = c;
-    opt.text = c;
-    dropdown.appendChild(opt);
-  }
-};
