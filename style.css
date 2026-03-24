@@ -183,12 +183,71 @@ progress::-webkit-progress-value{
   background:#374151;
   transform:translateX(5px);
 }
-.tab-btn {
-  @apply px-6 py-2 mx-2 rounded-full bg-gray-200 text-gray-700 font-semibold transition;
+/* 🔥 MODERN TAB SWITCH */
+.tab-container{
+  position:relative;
+  display:flex;
+  width:100%;
+  margin-bottom:20px;
+  background:#020617;
+  border-radius:999px;
+  padding:5px;
 }
 
-.tab-btn.active {
-  @apply bg-blue-600 text-white;
+.tab{
+  flex:1;
+  z-index:2;
+  padding:10px 0;
+  border:none;
+  background:transparent;
+  color:#64748b;
+  font-weight:600;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.tab.active{
+  color:white;
+}
+
+.tab-slider{
+  position:absolute;
+  top:5px;
+  left:5px;
+  width:50%;
+  height:calc(100% - 10px);
+  background:linear-gradient(135deg,#22d3ee,#3b82f6);
+  border-radius:999px;
+  transition:0.3s ease;
+}
+
+/* SECTIONS */
+.section{
+  margin-top:10px;
+}
+
+/* BETTER INPUT SPACING */
+input, select{
+  margin-bottom:10px;
+}
+
+/* IMPROVE BUTTON LOOK */
+button{
+  background:linear-gradient(135deg,#22d3ee,#3b82f6);
+}
+
+button:hover{
+  background:linear-gradient(135deg,#06b6d4,#2563eb);
+}
+
+/* CARD GLOW EFFECT */
+.card{
+  border:1px solid #1e293b;
+}
+
+.card:hover{
+  box-shadow:0 0 25px rgba(34,211,238,0.15);
+}
 }
 /* RESPONSIVE */
 @media(max-width:768px){
