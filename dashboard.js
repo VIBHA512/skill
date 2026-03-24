@@ -14,7 +14,33 @@ function showDashboard() {
     document.getElementById("output").innerHTML = "Career data not found.";
     return;
   }
+const fresherTab = document.getElementById("fresherTab");
+const experiencedTab = document.getElementById("experiencedTab");
 
+const fresherSection = document.getElementById("fresherSection");
+const experiencedSection = document.getElementById("experiencedSection");
+
+let userType = "fresher";
+
+fresherTab.addEventListener("click", () => {
+  userType = "fresher";
+
+  fresherTab.classList.add("active");
+  experiencedTab.classList.remove("active");
+
+  fresherSection.classList.remove("hidden");
+  experiencedSection.classList.add("hidden");
+});
+
+experiencedTab.addEventListener("click", () => {
+  userType = "experienced";
+
+  experiencedTab.classList.add("active");
+  fresherTab.classList.remove("active");
+
+  experiencedSection.classList.remove("hidden");
+  fresherSection.classList.add("hidden");
+});
   // 🔥 Convert user input → object
   const userSkills = {};
 
