@@ -1,8 +1,46 @@
+// 🌍 GLOBAL USER TYPE
+let userType = "fresher";
+
+// 🎛️ TAB ELEMENTS
+const fresherTab = document.getElementById("fresherTab");
+const experiencedTab = document.getElementById("experiencedTab");
+const slider = document.getElementById("tabSlider");
+
+const fresherSection = document.getElementById("fresherSection");
+const experiencedSection = document.getElementById("experiencedSection");
+
+// 🔄 TAB SWITCHING
+fresherTab.addEventListener("click", () => {
+  userType = "fresher";
+  slider.style.transform = "translateX(0%)";
+
+  fresherTab.classList.add("active");
+  experiencedTab.classList.remove("active");
+
+  fresherSection.classList.remove("hidden");
+  experiencedSection.classList.add("hidden");
+});
+
+experiencedTab.addEventListener("click", () => {
+  userType = "experienced";
+  slider.style.transform = "translateX(100%)";
+
+  experiencedTab.classList.add("active");
+  fresherTab.classList.remove("active");
+
+  experiencedSection.classList.remove("hidden");
+  fresherSection.classList.add("hidden");
+});
+
+
 // 🎯 ANALYZE SKILL GAP
 function analyze(){ 
 
   let career = document.getElementById("career").value;
-  let userInput = document.getElementById("skills").value;
+
+  let userInput = userType === "fresher"
+    ? document.getElementById("skills").value
+    : document.getElementById("skillsExp").value;
 
   if(userInput.trim() === ""){
     document.getElementById("output").innerHTML = "⚠️ Please enter your skills first.";
@@ -16,7 +54,7 @@ function analyze(){
     return;
   }
 
-  // 🔥 Convert user input → object
+  // 🔥 USER SKILLS OBJECT
   const userSkills = {};
 
   userInput.split(',').forEach(s => {
@@ -30,9 +68,8 @@ function analyze(){
     userSkills[skill] = level;
   });
 
-  // 🔥 Soft Skills (SAFE)
+  // 🧠 SOFT SKILLS
   let userSoftInput = [];
-
   let softField = document.getElementById("softSkills");
 
   if(softField){
@@ -42,7 +79,7 @@ function analyze(){
       .filter(s => s !== "");
   }
 
-  // ✅ Missing skills
+  // ❌ MISSING SKILLS
   let missing = [];
 
   for(let skill in requiredSkills){
@@ -51,7 +88,7 @@ function analyze(){
     }
   }
 
-  // 🧠 SOFT SKILL SCORE
+  // 🧠 SOFT SCORE
   let softScore = 0;
   let totalSoftWeight = 0;
 
@@ -69,13 +106,31 @@ function analyze(){
     ? Math.round((softScore / totalSoftWeight) * 100)
     : 0;
 
-  // 🎯 TECHNICAL SCORE
+  // 🎯 TECH SCORE
   let score = calculateMatch(userSkills, requiredSkills);
 
   // 🎯 FINAL SCORE
   let finalScore = userSoftInput.length > 0
     ? Math.round((score * 0.7) + (softPercent * 0.3))
     : score;
+
+  // 💼 EXPERIENCE BOOST
+  let experienceYears = 0;
+  let extraInfo = "";
+
+  if(userType === "experienced"){
+    experienceYears = parseInt(document.getElementById("experienceYears").value) || 0;
+
+    finalScore += Math.min(experienceYears * 2, 10);
+
+    let role = document.getElementById("jobRole").value || "Not specified";
+
+    extraInfo = `
+      <h3>💼 Experience Details</h3>
+      <p>Years: ${experienceYears}</p>
+      <p>Previous Role: ${role}</p>
+    `;
+  }
 
   // 📚 COURSES
   let coursesHTML = "";
@@ -108,6 +163,8 @@ function analyze(){
   let result = `
     <h2>🎯 ${career} Skill Analysis</h2>
 
+    ${extraInfo}
+
     <h3>📊 Technical Score: ${score}%</h3>
     <h3>🧠 Soft Skills Score: ${softPercent}%</h3>
     <h3>🎯 Overall Score: <span style="color:#4ade80">${finalScore}%</span></h3>
@@ -135,7 +192,9 @@ function analyze(){
 // 🚀 SUGGEST CAREERS
 function suggestCareers(){
 
-  let userInput = document.getElementById("skills").value;
+  let userInput = userType === "fresher"
+    ? document.getElementById("skills").value
+    : document.getElementById("skillsExp").value;
 
   if(userInput.trim() === ""){
     document.getElementById("output").innerHTML = "⚠️ Please enter your skills first.";
@@ -156,7 +215,6 @@ function suggestCareers(){
   let results = [];
 
   for(let career in careerSkills){
-
     let score = calculateMatch(userSkills, careerSkills[career]);
 
     if(score > 0){
@@ -179,7 +237,9 @@ function suggestCareers(){
 // 🚀 BEST CAREER
 function recommendCareer(){
 
-  let userInput = document.getElementById("skills").value;
+  let userInput = userType === "fresher"
+    ? document.getElementById("skills").value
+    : document.getElementById("skillsExp").value;
 
   if(userInput.trim() === ""){
     document.getElementById("output").innerHTML = "⚠️ Please enter your skills first.";
@@ -201,7 +261,6 @@ function recommendCareer(){
   let maxScore = 0;
 
   for(let career in careerSkills){
-
     let score = calculateMatch(userSkills, careerSkills[career]);
 
     if(score > maxScore){
@@ -210,47 +269,9 @@ function recommendCareer(){
     }
   }
 
-  if(bestCareer === ""){
-    document.getElementById("output").innerHTML = "No suitable career found.";
-  }
-  else{
-    document.getElementById("output").innerHTML = `
-      <h2>🚀 Recommended Career</h2>
-      <p><b>${bestCareer}</b></p>
-      <p>Match Score: ${maxScore}%</p>
-    `;
-  }
+  document.getElementById("output").innerHTML = bestCareer
+    ? `<h2>🚀 Recommended Career</h2>
+       <p><b>${bestCareer}</b></p>
+       <p>Match Score: ${maxScore}%</p>`
+    : "No suitable career found.";
 }
-
-
-// 🔥 LOAD DATA
-window.onload = function() {
-
-  // 🔹 Trending Skills
-  let list = document.getElementById("trending");
-
-  if (list) {
-    list.innerHTML = "";
-
-    trendingSkills.forEach(skill => {
-      let li = document.createElement("li");
-      li.innerText = "🔥 " + skill;
-      list.appendChild(li);
-    });
-  }
-
-  // 🔹 Dynamic Career Dropdown
-  let dropdown = document.getElementById("career");
-
-  if (dropdown) {
-    dropdown.innerHTML = "";
-
-    Object.keys(careerSkills).forEach(career => {
-      let option = document.createElement("option");
-      option.value = career;
-      option.text = career;
-      dropdown.appendChild(option);
-    });
-  }
-
-};
