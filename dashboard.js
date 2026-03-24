@@ -1,7 +1,11 @@
+// 📊 SHOW DASHBOARD
 function showDashboard() {
 
   let career = document.getElementById("career").value;
-  let userInput = document.getElementById("skills").value;
+
+  let userInput = userType === "fresher"
+    ? document.getElementById("skills").value
+    : document.getElementById("skillsExp").value;
 
   if(userInput.trim() === ""){
     document.getElementById("output").innerHTML = "⚠️ Please enter your skills first.";
@@ -14,34 +18,8 @@ function showDashboard() {
     document.getElementById("output").innerHTML = "Career data not found.";
     return;
   }
-const fresherTab = document.getElementById("fresherTab");
-const experiencedTab = document.getElementById("experiencedTab");
 
-const fresherSection = document.getElementById("fresherSection");
-const experiencedSection = document.getElementById("experiencedSection");
-
-let userType = "fresher";
-
-fresherTab.addEventListener("click", () => {
-  userType = "fresher";
-
-  fresherTab.classList.add("active");
-  experiencedTab.classList.remove("active");
-
-  fresherSection.classList.remove("hidden");
-  experiencedSection.classList.add("hidden");
-});
-
-experiencedTab.addEventListener("click", () => {
-  userType = "experienced";
-
-  experiencedTab.classList.add("active");
-  fresherTab.classList.remove("active");
-
-  experiencedSection.classList.remove("hidden");
-  fresherSection.classList.add("hidden");
-});
-  // 🔥 Convert user input → object
+  // 🔥 USER SKILLS OBJECT
   const userSkills = {};
 
   userInput.split(',').forEach(s => {
@@ -59,11 +37,12 @@ experiencedTab.addEventListener("click", () => {
   let score = 0;
   let totalWeight = 0;
 
-  // 🔥 Process skills
+  // 🔥 PROCESS SKILLS
   for(let skill in requiredSkills){
 
     let level = requiredSkills[skill].level || "beginner";
-let weight = requiredSkills[skill].weight || 1;
+    let weight = requiredSkills[skill].weight || 1;
+
     totalWeight += weight;
 
     if(userSkills[skill] && compareLevel(userSkills[skill], level)){
@@ -73,9 +52,28 @@ let weight = requiredSkills[skill].weight || 1;
       remaining.push(skill);
     }
   }
-let progress = totalWeight ? Math.round((score / totalWeight) * 100) : 0;
 
-  // 🧠 Convert levels to numbers for chart
+  let progress = totalWeight 
+    ? Math.round((score / totalWeight) * 100)
+    : 0;
+
+  // 💼 EXPERIENCE BOOST
+  let extraInfo = "";
+
+  if(userType === "experienced"){
+    let years = parseInt(document.getElementById("experienceYears").value) || 0;
+    let role = document.getElementById("jobRole").value || "Not specified";
+
+    progress += Math.min(years * 2, 10);
+
+    extraInfo = `
+      <h3>💼 Experience Overview</h3>
+      <p>Years: ${years}</p>
+      <p>Role: ${role}</p>
+    `;
+  }
+
+  // 🧠 LEVEL → NUMBER
   function levelToNumber(level){
     return level === "advanced" ? 100 :
            level === "intermediate" ? 70 : 40;
@@ -87,21 +85,23 @@ let progress = totalWeight ? Math.round((score / totalWeight) * 100) : 0;
     if(userSkills[skill]){
       return levelToNumber(userSkills[skill]);
     } else {
-      return 20; // not learned
+      return 20;
     }
   });
 
-  // 🧾 UI
+  // 🎯 UI OUTPUT
   let html = `
-    <h2>📊 Learning Progress</h2>
+    <h2>📊 Skill Dashboard</h2>
+
+    ${extraInfo}
 
     <p><b>Overall Progress:</b> ${progress}%</p>
     <progress value="${progress}" max="100"></progress>
 
-    <h3>✅ Skills Completed</h3>
+    <h3>✅ Completed Skills</h3>
     <p>${learned.join(", ") || "None yet"}</p>
 
-    <h3>📌 Skills Remaining</h3>
+    <h3>📌 Remaining Skills</h3>
     <p>${remaining.join(", ") || "None 🎉"}</p>
 
     <canvas id="skillChart" style="margin-top:20px;"></canvas>
@@ -109,30 +109,49 @@ let progress = totalWeight ? Math.round((score / totalWeight) * 100) : 0;
 
   document.getElementById("output").innerHTML = html;
 
-  // 📊 CHART
-let ctx = document.getElementById("skillChart").getContext("2d");
-if(window.skillChartInstance){
-  window.skillChartInstance.destroy();
-}
+  // 📊 DESTROY OLD CHART
+  if(window.skillChartInstance){
+    window.skillChartInstance.destroy();
+  }
+
+  let ctx = document.getElementById("skillChart").getContext("2d");
+
+  // 📊 CREATE NEW CHART
   window.skillChartInstance = new Chart(ctx, {
     type: 'bar',
     data: {
       labels: labels,
       datasets: [{
-        label: 'Skill Level Progress',
+        label: 'Skill Level',
         data: chartData
       }]
     },
     options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          labels: {
+            color: "#fff"
+          }
+        }
+      },
       scales: {
+        x: {
+          ticks: {
+            color: "#cbd5f5"
+          }
+        },
         y: {
           beginAtZero: true,
-          max: 100
+          max: 100,
+          ticks: {
+            color: "#cbd5f5"
+          }
         }
       }
     }
   });
 
-  // 💾 Save
+  // 💾 SAVE DATA
   localStorage.setItem("userSkills", JSON.stringify(userSkills));
 }
