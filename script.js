@@ -1,35 +1,70 @@
 // 🌍 GLOBAL USER TYPE
 let userType = "fresher";
 
-// 🎛️ TAB ELEMENTS
-const fresherTab = document.getElementById("fresherTab");
-const experiencedTab = document.getElementById("experiencedTab");
-const slider = document.getElementById("tabSlider");
 
-const fresherSection = document.getElementById("fresherSection");
-const experiencedSection = document.getElementById("experiencedSection");
+// 🚀 RUN AFTER PAGE LOAD
+document.addEventListener("DOMContentLoaded", function(){
 
-// 🔄 TAB SWITCHING
-fresherTab.addEventListener("click", () => {
-  userType = "fresher";
-  slider.style.transform = "translateX(0%)";
+  // 🎛️ TAB ELEMENTS
+  const fresherTab = document.getElementById("fresherTab");
+  const experiencedTab = document.getElementById("experiencedTab");
+  const slider = document.getElementById("tabSlider");
 
-  fresherTab.classList.add("active");
-  experiencedTab.classList.remove("active");
+  const fresherSection = document.getElementById("fresherSection");
+  const experiencedSection = document.getElementById("experiencedSection");
 
-  fresherSection.classList.remove("hidden");
-  experiencedSection.classList.add("hidden");
-});
+  // 🔄 TAB SWITCHING
+  fresherTab.addEventListener("click", () => {
+    userType = "fresher";
+    slider.style.transform = "translateX(0%)";
 
-experiencedTab.addEventListener("click", () => {
-  userType = "experienced";
-  slider.style.transform = "translateX(100%)";
+    fresherTab.classList.add("active");
+    experiencedTab.classList.remove("active");
 
-  experiencedTab.classList.add("active");
-  fresherTab.classList.remove("active");
+    fresherSection.classList.remove("hidden");
+    experiencedSection.classList.add("hidden");
+  });
 
-  experiencedSection.classList.remove("hidden");
-  fresherSection.classList.add("hidden");
+  experiencedTab.addEventListener("click", () => {
+    userType = "experienced";
+    slider.style.transform = "translateX(100%)";
+
+    experiencedTab.classList.add("active");
+    fresherTab.classList.remove("active");
+
+    experiencedSection.classList.remove("hidden");
+    fresherSection.classList.add("hidden");
+  });
+
+
+  // 🔥 TRENDING SKILLS
+  let list = document.getElementById("trending");
+
+  if (list && typeof trendingSkills !== "undefined") {
+    list.innerHTML = "";
+
+    trendingSkills.forEach(skill => {
+      let li = document.createElement("li");
+      li.innerText = "🔥 " + skill;
+      list.appendChild(li);
+    });
+  }
+
+
+  // 🔥 DYNAMIC CAREER DROPDOWN
+  let dropdown = document.getElementById("career");
+
+  if (dropdown && typeof careerSkills !== "undefined") {
+    dropdown.innerHTML = "";
+
+    Object.keys(careerSkills).forEach(career => {
+      let option = document.createElement("option");
+      option.value = career;
+      option.text = career;
+      dropdown.appendChild(option);
+    });
+  }
+
 });
 
 
@@ -115,19 +150,17 @@ function analyze(){
     : score;
 
   // 💼 EXPERIENCE BOOST
-  let experienceYears = 0;
   let extraInfo = "";
 
   if(userType === "experienced"){
-    experienceYears = parseInt(document.getElementById("experienceYears").value) || 0;
-
-    finalScore += Math.min(experienceYears * 2, 10);
-
+    let years = parseInt(document.getElementById("experienceYears").value) || 0;
     let role = document.getElementById("jobRole").value || "Not specified";
+
+    finalScore += Math.min(years * 2, 10);
 
     extraInfo = `
       <h3>💼 Experience Details</h3>
-      <p>Years: ${experienceYears}</p>
+      <p>Years: ${years}</p>
       <p>Previous Role: ${role}</p>
     `;
   }
@@ -182,8 +215,6 @@ function analyze(){
   `;
 
   document.getElementById("output").innerHTML = result;
-
-  localStorage.setItem("userSkills", JSON.stringify(userSkills));
 
   document.getElementById("output").scrollIntoView({ behavior: "smooth" });
 }
