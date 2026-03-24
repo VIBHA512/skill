@@ -107,6 +107,9 @@ button:active{
 #output p[style]{
   font-weight:bold;
 }
+.hidden {
+  display: none;
+}
 
 /* PROGRESS BAR */
 progress{
