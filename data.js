@@ -94,15 +94,6 @@ const softSkills = {
 };
 
 
-// 🔁 SYNONYMS (FOR BETTER MATCHING)
-const synonyms = {
-  "ml": "machine learning",
-  "ai": "machine learning",
-  "js": "javascript",
-  "python programming": "python",
-  "data viz": "data visualization"
-};
-
 
 // 📚 COURSE DATA
 const courseData = {
