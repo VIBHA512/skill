@@ -8,74 +8,38 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <div class="background-glow"></div>
-    
-    <nav class="navbar">
-        <div class="logo">SkillBridge<span>AI</span></div>
-        <div class="nav-links">
-            <a href="#">Dashboard</a>
-            <a href="#">Trending</a>
-            <button class="btn-primary">Get Started</button>
-        </div>
-    </nav>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="logo">SkillBridge AI</div>
+            <nav>
+                <a href="#" class="nav-item active">Dashboard</a>
+                <a href="#" class="nav-item">Gap Analysis</a>
+                <a href="#" class="nav-item">Roadmaps</a>
+                <a href="#" class="nav-item">Settings</a>
+            </nav>
+        </aside>
 
-    <main class="container">
-        <header class="hero-section">
-            <h1>Bridge Your <span class="gradient-text">Career Gap</span></h1>
-            <p>AI-driven skill analysis tailored to your professional level.</p>
-        </header>
+        <main class="main-content">
+            <header class="top-bar">
+                <input type="text" placeholder="Search skills...">
+                <div class="user-profile">V</div>
+            </header>
 
-        <div class="tabs-container">
-            <div class="tabs-wrapper">
-                <input type="radio" name="level" id="fresher" checked>
-                <input type="radio" name="level" id="experienced">
-                
-                <label for="fresher" class="tab-label">
-                    <i class="fas fa-graduation-cap"></i> Fresher
-                </label>
-                <label for="experienced" class="tab-label">
-                    <i class="fas fa-briefcase"></i> Experienced
-                </label>
-                
-                <div class="tab-slider"></div>
-            </div>
-        </div>
-
-        <div class="analysis-card">
-            <div id="form-content">
-                <div class="input-group">
-                    <label>Target Career Path</label>
-                    <select id="targetCareer">
-                        <option>AI Engineer</option>
-                        <option>Data Scientist</option>
-                        <option>Full Stack Developer</option>
-                        <option>Cloud Architect</option>
-                    </select>
-                </div>
-
-                <div id="experienced-fields" class="hidden-fields">
-                    <div class="input-group">
-                        <label>Current Experience (Years): <span id="expValue">3</span></label>
-                        <input type="range" min="1" max="20" value="3" class="slider" id="expRange">
+            <section class="content-area">
+                <h1>Welcome back, Vibha</h1>
+                <div class="grid-container">
+                    <div class="card">
+                        <h3>Analyze Skills</h3>
+                        <div id="input-area"> </div>
+                    </div>
+                    
+                    <div class="card chart-card">
+                        <h3>Your Progress</h3>
+                        <div id="result-display"> </div>
                     </div>
                 </div>
-
-                <div class="input-group">
-                    <label>Upload Resume (AI Extraction)</label>
-                    <div class="upload-area" id="dropZone">
-                        <i class="fas fa-cloud-upload-alt"></i>
-                        <p>Drag & drop or click to browse</p>
-                    </div>
-                </div>
-
-                <button class="cta-button" onclick="analyzeSkills()">
-                    <span>Analyze Skill Gap</span>
-                    <i class="fas fa-arrow-right"></i>
-                </button>
-            </div>
-        </div>
-    </main>
-
-    <script src="script.js"></script>
+            </section>
+        </main>
+    </div>
 </body>
 </html>
