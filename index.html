@@ -20,26 +20,36 @@
 </div>
 
 <div class="container">
-<div class="flex justify-center mb-6">
-  <button id="fresherTab" class="tab-btn active">Fresher</button>
-  <button id="experiencedTab" class="tab-btn">Experienced</button>
-</div>
-  <!-- Fresher Section -->
-<div id="fresherSection">
-  <input type="text" placeholder="Enter your skills" class="input-box">
-</div>
 
-<!-- Experienced Section -->
-<div id="experiencedSection" class="hidden">
-  <input type="text" placeholder="Enter your skills" class="input-box">
-  
-  <input type="number" placeholder="Years of Experience" class="input-box mt-3">
-  
-  <input type="text" placeholder="Previous Job Role" class="input-box mt-3">
-</div>
   <!-- MAIN CARD -->
   <div class="card">
 
+    <!-- 🔥 MODERN TABS -->
+    <div class="tab-container">
+      <div class="tab-slider" id="tabSlider"></div>
+      <button class="tab active" id="fresherTab">Fresher</button>
+      <button class="tab" id="experiencedTab">Experienced</button>
+    </div>
+
+    <!-- 👇 Fresher Section -->
+    <div id="fresherSection" class="section">
+      <h3>Enter Your Skills</h3>
+      <input id="skills" placeholder="Python, SQL, Machine Learning">
+    </div>
+
+    <!-- 👇 Experienced Section -->
+    <div id="experiencedSection" class="section hidden">
+      <h3>Enter Your Skills</h3>
+      <input id="skillsExp" placeholder="Python, React, Node.js">
+
+      <h3>Years of Experience</h3>
+      <input type="number" id="experienceYears" placeholder="e.g. 2">
+
+      <h3>Previous Job Role</h3>
+      <input type="text" id="jobRole" placeholder="e.g. Frontend Developer">
+    </div>
+
+    <!-- Career -->
     <h3>Select Target Career</h3>
     <select id="career">
       <option>Data Scientist</option>
@@ -47,21 +57,21 @@
       <option>AI Engineer</option>
       <option>Cybersecurity Analyst</option>
       <option>Data Analyst</option>
-<option>Frontend Developer</option>
-<option>Backend Developer</option>
-<option>Cloud Engineer</option>
+      <option>Frontend Developer</option>
+      <option>Backend Developer</option>
+      <option>Cloud Engineer</option>
     </select>
 
+    <!-- Resume -->
     <h3>Upload Resume</h3>
     <input type="file" id="resumeUpload" accept="image/*">
     <button onclick="extractSkills()">Extract Skills</button>
 
-    <h3>Enter Your Skills</h3>
-    <input id="skills" placeholder="Python, SQL, Machine Learning">
-
+    <!-- Soft Skills -->
     <h3>Enter Soft Skills</h3>
-<input id="softSkills" placeholder="Communication, Teamwork, Leadership">
+    <input id="softSkills" placeholder="Communication, Teamwork, Leadership">
 
+    <!-- Buttons -->
     <div class="btn-group">
       <button onclick="analyze()">Analyze Skill Gap</button>
       <button onclick="recommendCareer()">Recommend Career</button>
@@ -74,18 +84,15 @@
   <!-- OUTPUT -->
   <div id="output" class="card result-card"></div>
 
-  <!-- 🔥 CHATBOT -->
+  <!-- CHATBOT -->
   <div class="card">
     <h3>AI Career Chatbot</h3>
-
     <div id="chatbox" class="chatbox"></div>
-
     <input id="chatInput" placeholder="Ask about skills, careers..." />
     <button onclick="sendMessage()">Send</button>
   </div>
 
-  
-  <!-- 📈 TRENDING SKILLS -->
+  <!-- TRENDING -->
   <div class="card">
     <h3>🔥 Trending Skills</h3>
     <ul id="trending"></ul>
@@ -93,12 +100,12 @@
 
 </div>
 
-<!-- Scripts -->
 <script src="data.js"></script>
 <script src="ai.js"></script>
 <script src="script.js"></script>
 <script src="dashboard.js"></script>
 
+</body>
 
 </body>
 </html>
