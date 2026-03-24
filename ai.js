@@ -1,4 +1,4 @@
-// 🎯 KNOWN SKILLS (EXPANDED + LOWERCASE SAFE)
+// 🎯 KNOWN SKILLS
 const knownSkills = [
   "python", "machine learning", "sql", "html", "css", "javascript",
   "react", "node.js", "deep learning", "tensorflow", "nlp",
@@ -7,7 +7,7 @@ const knownSkills = [
 ];
 
 
-// 📄 RESUME SKILL EXTRACTION (IMPROVED)
+// 📄 RESUME SKILL EXTRACTION (FIXED 🔥)
 function extractSkills() {
 
   let fileInput = document.getElementById("resumeUpload");
@@ -33,13 +33,16 @@ function extractSkills() {
         }
       });
 
-      // 🔥 Normalize + remove duplicates
       detected = [...new Set(detected.map(s => normalizeSkill(s)))];
 
-      // 👉 Add default level (beginner)
       let formatted = detected.map(skill => `${skill}:intermediate`);
 
-      document.getElementById("skills").value = formatted.join(", ");
+      // 🔥 FIX: put in correct input
+      if(userType === "fresher"){
+        document.getElementById("skills").value = formatted.join(", ");
+      } else {
+        document.getElementById("skillsExp").value = formatted.join(", ");
+      }
 
       document.getElementById("output").innerHTML =
         "✅ Skills Extracted Successfully!";
@@ -52,35 +55,52 @@ function extractSkills() {
 
 
 
-// 🤖 SMART CHATBOT RESPONSE
+// 🤖 SMART CHATBOT RESPONSE (UPGRADED)
 function chatbotResponse(input) {
 
   input = input.toLowerCase();
 
-  // 🔥 Skill-based career suggestions
+  // 🎯 GET USER SKILLS BASED ON TAB
+  let userInput = userType === "fresher"
+    ? document.getElementById("skills").value
+    : document.getElementById("skillsExp").value;
+
+  // 🔥 Convert to object
+  let userSkills = {};
+
+  if(userInput.trim() !== ""){
+    userInput.split(',').forEach(s => {
+      let [skill, level] = s.split(':');
+
+      skill = normalizeSkill(skill);
+      level = (level || "intermediate").toLowerCase().trim();
+
+      userSkills[skill] = level;
+    });
+  }
+
+  // 🔥 Skill-based replies
   if (input.includes("python")) {
-    return "With Python, you can explore Data Scientist, AI Engineer, or Backend Developer roles. Try improving ML and projects!";
+    return "With Python, you can explore Data Scientist, AI Engineer, or Backend Developer roles.";
   }
 
   if (input.includes("web")) {
-    return "You can go for Frontend Developer, Backend Developer, or Full Stack roles. Focus on JavaScript and frameworks.";
+    return "You can go for Frontend, Backend, or Full Stack roles. Focus on JavaScript + frameworks.";
   }
 
   if (input.includes("ai") || input.includes("machine learning")) {
-    return "To become an AI Engineer, focus on Python, Machine Learning, Deep Learning, and real-world projects.";
+    return "Focus on Python, ML, Deep Learning, and real-world projects to become an AI Engineer.";
   }
 
   if (input.includes("cyber")) {
-    return "Cybersecurity requires Networking, Linux, Ethical Hacking, and Security Analysis. Start with basics + labs.";
+    return "Cybersecurity needs Networking, Linux, and Ethical Hacking. Start with basics + labs.";
   }
 
-  // 🔥 Dynamic career suggestion using YOUR system
-  if (input.includes("career")) {
+  // 🚀 DYNAMIC CAREER MATCH (FIXED)
+  if (input.includes("career") || input.includes("best")) {
 
-    let userInput = document.getElementById("skills").value;
-
-    if(userInput.trim() === ""){
-      return "Please enter your skills first so I can suggest a career for you.";
+    if(Object.keys(userSkills).length === 0){
+      return "Enter your skills first so I can suggest a career.";
     }
 
     let bestCareer = "";
@@ -88,7 +108,7 @@ function chatbotResponse(input) {
 
     for(let career in careerSkills){
 
-      let score = calculateMatch(userInput, careerSkills[career]);
+      let score = calculateMatch(userSkills, careerSkills[career]);
 
       if(score > maxScore){
         maxScore = score;
@@ -96,26 +116,33 @@ function chatbotResponse(input) {
       }
     }
 
-    return `Based on your skills, you are best suited for ${bestCareer} with a ${maxScore}% match.`;
+    // 💼 EXPERIENCE CONTEXT (NEW 🔥)
+    let extra = "";
+
+    if(userType === "experienced"){
+      let years = parseInt(document.getElementById("experienceYears").value) || 0;
+      extra = ` With your ${years} years of experience, you have an advantage.`;
+    }
+
+    return `Based on your skills, ${bestCareer} suits you best (${maxScore}% match).${extra}`;
   }
 
-  // 🔥 Skill improvement guidance
+  // 📚 LEARNING HELP
   if (input.includes("improve") || input.includes("learn")) {
-    return "Focus on high-weight skills first, build projects, and follow a roadmap. Consistency is key!";
+    return "Focus on high-weight skills, build projects, and stay consistent.";
   }
 
-  // 🔥 Roadmap guidance
   if (input.includes("roadmap")) {
-    return "Start with fundamentals → build projects → learn advanced topics → apply for internships.";
+    return "Start with basics → projects → advanced skills → internships/jobs.";
   }
 
-  // 🔥 Default smart fallback
-  return "I can help with career suggestions, skill gaps, and learning paths. Try asking: 'best career for me' or 'how to become AI engineer'.";
+  // 🤖 DEFAULT
+  return "I can help with career suggestions, skill gaps, and learning paths. Try asking: 'best career for me'.";
 }
 
 
 
-// 💬 SEND MESSAGE (UI CONNECT)
+// 💬 SEND MESSAGE
 function sendMessage() {
 
   let inputField = document.getElementById("chatInput");
@@ -125,11 +152,10 @@ function sendMessage() {
 
   if (input === "") return;
 
-  // 👤 User message
   chatbox.innerHTML += `<p><b>You:</b> ${input}</p>`;
 
-  // 🤖 AI reply
   let reply = chatbotResponse(input);
+
   chatbox.innerHTML += `<p><b>AI:</b> ${reply}</p>`;
 
   inputField.value = "";
