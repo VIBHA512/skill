@@ -1,81 +1,256 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const fresherRadio = document.getElementById('fresher');
-    const expRadio = document.getElementById('experienced');
-    const expFields = document.getElementById('experienced-fields');
-    const expSlider = document.getElementById('expRange');
-    const expValue = document.getElementById('expValue');
+// 🎯 ANALYZE SKILL GAP
+function analyze(){ 
 
-    // Toggle Experienced UI
-    const updateUI = () => {
-        if (expRadio.checked) {
-            expFields.classList.add('show-fields');
-        } else {
-            expFields.classList.remove('show-fields');
-        }
-    };
+  let career = document.getElementById("career").value;
+  let userInput = document.getElementById("skills").value;
 
-    fresherRadio.addEventListener('change', updateUI);
-    expRadio.addEventListener('change', updateUI);
+  if(userInput.trim() === ""){
+    document.getElementById("output").innerHTML = "⚠️ Please enter your skills first.";
+    return;
+  }
 
-    // Update Experience Label
-    expSlider.addEventListener('input', (e) => {
-        expValue.textContent = e.target.value;
-    });
-});
+  let requiredSkills = careerSkills[career];
 
-function analyzeSkills() {
-    const isExperienced = document.getElementById('experienced').checked;
-    const target = document.getElementById('targetCareer').value;
-    const years = isExperienced ? document.getElementById('expRange').value : 0;
+  if(!requiredSkills){
+    document.getElementById("output").innerHTML = "Career data not found.";
+    return;
+  }
 
-    // Logic for personalized analysis
-    let analysisMsg = "";
-    if (!isExperienced) {
-        analysisMsg = `Analyzing foundational skills for entry-level ${target}. Focus: Projects & Core Concepts.`;
-    } else {
-        analysisMsg = `Analyzing advanced leadership and technical skills for ${target} with ${years} years of exp. Focus: System Design & Strategy.`;
+  // 🔥 Convert user input → object
+  const userSkills = {};
+
+  userInput.split(',').forEach(s => {
+    let [skill, level] = s.split(':');
+
+    skill = normalizeSkill(skill);
+    level = (level || "intermediate").toLowerCase().trim();
+
+    if(level === "basic") level = "beginner";
+
+    userSkills[skill] = level;
+  });
+
+  // 🔥 Soft Skills (SAFE)
+  let userSoftInput = [];
+
+  let softField = document.getElementById("softSkills");
+
+  if(softField){
+    userSoftInput = softField.value
+      .split(",")
+      .map(s => s.trim().toLowerCase())
+      .filter(s => s !== "");
+  }
+
+  // ✅ Missing skills
+  let missing = [];
+
+  for(let skill in requiredSkills){
+    if(!userSkills[skill]){
+      missing.push(skill);
     }
+  }
 
-    alert(analysisMsg);
-    // Here you would call your AI endpoint (like ai.js in your repo)
+  // 🧠 SOFT SKILL SCORE
+  let softScore = 0;
+  let totalSoftWeight = 0;
+
+  let requiredSoft = softSkills[career] || {};
+
+  for(let skill in requiredSoft){
+    totalSoftWeight += requiredSoft[skill];
+
+    if(userSoftInput.includes(skill)){
+      softScore += requiredSoft[skill];
+    }
+  }
+
+  let softPercent = totalSoftWeight 
+    ? Math.round((softScore / totalSoftWeight) * 100)
+    : 0;
+
+  // 🎯 TECHNICAL SCORE
+  let score = calculateMatch(userSkills, requiredSkills);
+
+  // 🎯 FINAL SCORE
+  let finalScore = userSoftInput.length > 0
+    ? Math.round((score * 0.7) + (softPercent * 0.3))
+    : score;
+
+  // 📚 COURSES
+  let coursesHTML = "";
+
+  missing.forEach(skill => {
+    if(courseData[skill]){
+      coursesHTML += `<h4>${skill}</h4><ul>`;
+      courseData[skill].forEach(course=>{
+        coursesHTML += `<li>${course}</li>`;
+      });
+      coursesHTML += "</ul>";
+    }
+  });
+
+  // 🛣️ ROADMAP
+  let roadmap = "";
+
+  missing.forEach((skill, index) => {
+    roadmap += `<li>Week ${index*2+1}-${index*2+2}: Learn ${skill}</li>`;
+  });
+
+  let roadmapHTML = `
+    <h3>🛣️ Personalized Roadmap</h3>
+    <ol>
+      ${roadmap || "<li>You are job-ready! 🎉</li>"}
+    </ol>
+  `;
+
+  // 🎯 OUTPUT
+  let result = `
+    <h2>🎯 ${career} Skill Analysis</h2>
+
+    <h3>📊 Technical Score: ${score}%</h3>
+    <h3>🧠 Soft Skills Score: ${softPercent}%</h3>
+    <h3>🎯 Overall Score: <span style="color:#4ade80">${finalScore}%</span></h3>
+
+    <h3>✅ Your Skills</h3>
+    <p>${Object.keys(userSkills).join(", ") || "None"}</p>
+
+    <h3>📌 Missing Skills</h3>
+    <p style="color:#f87171">${missing.join(", ") || "None 🎉"}</p>
+
+    <h3>📚 Recommended Courses</h3>
+    ${coursesHTML || "No course recommendations available"}
+
+    ${roadmapHTML}
+  `;
+
+  document.getElementById("output").innerHTML = result;
+
+  localStorage.setItem("userSkills", JSON.stringify(userSkills));
+
+  document.getElementById("output").scrollIntoView({ behavior: "smooth" });
 }
-function updateDashboard(analysisResults) {
-    const dashboard = document.querySelector('.analysis-card');
-    
-    // Injecting the results into the UI with a fade-in effect
-    dashboard.innerHTML = `
-        <div class="results-container animate-fade-in">
-            <h3>Your Readiness Score</h3>
-            <div class="score-circle">
-                <span class="score-number">${analysisResults.score}%</span>
-            </div>
-            
-            <div class="gap-list">
-                <h4>Skills to Acquire:</h4>
-                <ul>
-                    ${analysisResults.missing.map(s => `<li><i class="fas fa-plus-circle"></i> ${s}</li>`).join('')}
-                </ul>
-            </div>
 
-            <div class="roadmap-box">
-                <h4>Your Path:</h4>
-                <p>${analysisResults.plan}</p>
-            </div>
 
-            <button class="cta-button" onclick="window.location.reload()">New Analysis</button>
-        </div>
+// 🚀 SUGGEST CAREERS
+function suggestCareers(){
+
+  let userInput = document.getElementById("skills").value;
+
+  if(userInput.trim() === ""){
+    document.getElementById("output").innerHTML = "⚠️ Please enter your skills first.";
+    return;
+  }
+
+  let userSkills = {};
+
+  userInput.split(',').forEach(s => {
+    let [skill, level] = s.split(':');
+
+    skill = normalizeSkill(skill);
+    level = (level || "intermediate").toLowerCase().trim();
+
+    userSkills[skill] = level;
+  });
+
+  let results = [];
+
+  for(let career in careerSkills){
+
+    let score = calculateMatch(userSkills, careerSkills[career]);
+
+    if(score > 0){
+      results.push({ career, score });
+    }
+  }
+
+  results.sort((a, b) => b.score - a.score);
+
+  let html = "<h2>💡 Suggested Career Paths</h2>";
+
+  results.slice(0, 5).forEach(item => {
+    html += `<p><b>${item.career}</b> - ${item.score}% match</p>`;
+  });
+
+  document.getElementById("output").innerHTML = html;
+}
+
+
+// 🚀 BEST CAREER
+function recommendCareer(){
+
+  let userInput = document.getElementById("skills").value;
+
+  if(userInput.trim() === ""){
+    document.getElementById("output").innerHTML = "⚠️ Please enter your skills first.";
+    return;
+  }
+
+  let userSkills = {};
+
+  userInput.split(',').forEach(s => {
+    let [skill, level] = s.split(':');
+
+    skill = normalizeSkill(skill);
+    level = (level || "intermediate").toLowerCase().trim();
+
+    userSkills[skill] = level;
+  });
+
+  let bestCareer = "";
+  let maxScore = 0;
+
+  for(let career in careerSkills){
+
+    let score = calculateMatch(userSkills, careerSkills[career]);
+
+    if(score > maxScore){
+      maxScore = score;
+      bestCareer = career;
+    }
+  }
+
+  if(bestCareer === ""){
+    document.getElementById("output").innerHTML = "No suitable career found.";
+  }
+  else{
+    document.getElementById("output").innerHTML = `
+      <h2>🚀 Recommended Career</h2>
+      <p><b>${bestCareer}</b></p>
+      <p>Match Score: ${maxScore}%</p>
     `;
+  }
 }
-function analyzeSkills() {
-    const level = document.getElementById('experienced').checked ? 'experienced' : 'fresher';
-    const target = document.getElementById('targetCareer').value;
-    
-    // Mock user skills (normally extracted from resume/input)
-    const userSkills = ["Python", "HTML/CSS"]; 
 
-    // 1. Get results from AI logic
-    const results = processSkillGap(userSkills, target, level);
-    
-    // 2. Display results using Dashboard logic
-    updateDashboard(results);
-}
+
+// 🔥 LOAD DATA
+window.onload = function() {
+
+  // 🔹 Trending Skills
+  let list = document.getElementById("trending");
+
+  if (list) {
+    list.innerHTML = "";
+
+    trendingSkills.forEach(skill => {
+      let li = document.createElement("li");
+      li.innerText = "🔥 " + skill;
+      list.appendChild(li);
+    });
+  }
+
+  // 🔹 Dynamic Career Dropdown
+  let dropdown = document.getElementById("career");
+
+  if (dropdown) {
+    dropdown.innerHTML = "";
+
+    Object.keys(careerSkills).forEach(career => {
+      let option = document.createElement("option");
+      option.value = career;
+      option.text = career;
+      dropdown.appendChild(option);
+    });
+  }
+
+};
