@@ -1,45 +1,88 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SkillBridge AI | Professional Gap Analysis</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <title>SkillBridge AI</title>
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Tesseract -->
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
-    <div class="dashboard-container">
-        <aside class="sidebar">
-            <div class="logo">SkillBridge AI</div>
-            <nav>
-                <a href="#" class="nav-item active">Dashboard</a>
-                <a href="#" class="nav-item">Gap Analysis</a>
-                <a href="#" class="nav-item">Roadmaps</a>
-                <a href="#" class="nav-item">Settings</a>
-            </nav>
-        </aside>
 
-        <main class="main-content">
-            <header class="top-bar">
-                <input type="text" placeholder="Search skills...">
-                <div class="user-profile">V</div>
-            </header>
+<div class="navbar">
+  <h2>SkillBridge AI</h2>
+  <p>AI Skill Gap Analyzer</p>
+</div>
 
-            <section class="content-area">
-                <h1>Welcome back, Vibha</h1>
-                <div class="grid-container">
-                    <div class="card">
-                        <h3>Analyze Skills</h3>
-                        <div id="input-area"> </div>
-                    </div>
-                    
-                    <div class="card chart-card">
-                        <h3>Your Progress</h3>
-                        <div id="result-display"> </div>
-                    </div>
-                </div>
-            </section>
-        </main>
+<div class="container">
+
+  <!-- MAIN CARD -->
+  <div class="card">
+
+    <h3>Select Target Career</h3>
+    <select id="career">
+      <option>Data Scientist</option>
+      <option>Web Developer</option>
+      <option>AI Engineer</option>
+      <option>Cybersecurity Analyst</option>
+      <option>Data Analyst</option>
+<option>Frontend Developer</option>
+<option>Backend Developer</option>
+<option>Cloud Engineer</option>
+    </select>
+
+    <h3>Upload Resume</h3>
+    <input type="file" id="resumeUpload" accept="image/*">
+    <button onclick="extractSkills()">Extract Skills</button>
+
+    <h3>Enter Your Skills</h3>
+    <input id="skills" placeholder="Python, SQL, Machine Learning">
+
+    <h3>Enter Soft Skills</h3>
+<input id="softSkills" placeholder="Communication, Teamwork, Leadership">
+
+    <div class="btn-group">
+      <button onclick="analyze()">Analyze Skill Gap</button>
+      <button onclick="recommendCareer()">Recommend Career</button>
+      <button onclick="showDashboard()">Progress Dashboard</button>
+      <button onclick="suggestCareers()">Suggest Careers</button>
     </div>
+
+  </div>
+
+  <!-- OUTPUT -->
+  <div id="output" class="card result-card"></div>
+
+  <!-- 🔥 CHATBOT -->
+  <div class="card">
+    <h3>AI Career Chatbot</h3>
+
+    <div id="chatbox" class="chatbox"></div>
+
+    <input id="chatInput" placeholder="Ask about skills, careers..." />
+    <button onclick="sendMessage()">Send</button>
+  </div>
+
+  
+  <!-- 📈 TRENDING SKILLS -->
+  <div class="card">
+    <h3>🔥 Trending Skills</h3>
+    <ul id="trending"></ul>
+  </div>
+
+</div>
+
+<!-- Scripts -->
+<script src="data.js"></script>
+<script src="ai.js"></script>
+<script src="script.js"></script>
+<script src="dashboard.js"></script>
+
+
 </body>
 </html>
