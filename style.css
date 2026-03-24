@@ -1,89 +1,201 @@
-:root {
-    --sidebar-width: 260px;
-    --primary-blue: #2563eb;
-    --bg-light: #f8fafc;
-    --border-color: #e2e8f0;
+body{
+  background:#0f172a;
+  font-family:'Poppins',sans-serif;
+  margin:0;
+  color:white;
 }
 
-body {
-    margin: 0;
-    font-family: 'Inter', sans-serif;
-    background-color: var(--bg-light);
+/* NAVBAR */
+.navbar{
+  background:#020617;
+  padding:20px;
+  text-align:center;
+  border-bottom:1px solid #1e293b;
 }
 
-.dashboard-container {
-    display: flex;
-    height: 100vh;
+.navbar h2{
+  margin:0;
+  color:#22d3ee;
 }
 
-/* SIDEBAR STYLING */
-.sidebar {
-    width: var(--sidebar-width);
-    background: #0f172a;
-    color: white;
-    padding: 2rem;
-    display: flex;
-    flex-direction: column;
+/* LAYOUT */
+.container{
+  display:flex;
+  justify-content:center;
+  gap:30px;
+  padding:40px;
+  flex-wrap:wrap;
 }
 
-.logo {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 3rem;
-    color: #38bdf8;
+/* CARD */
+.card{
+  background:#111827;
+  padding:30px;
+  border-radius:16px;
+  width:380px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.5);
+  transition:0.3s;
 }
 
-.nav-item {
-    color: #94a3b8;
-    text-decoration: none;
-    padding: 0.8rem 1rem;
-    margin-bottom: 0.5rem;
-    border-radius: 8px;
-    transition: 0.3s;
+.card:hover{
+  transform:translateY(-5px);
 }
 
-.nav-item.active, .nav-item:hover {
-    background: var(--primary-blue);
-    color: white;
+.result-card{
+  width:420px;
 }
 
-/* MAIN CONTENT STYLING */
-.main-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
+/* HEADINGS */
+h2{
+  color:#22d3ee;
 }
 
-.top-bar {
-    height: 64px;
-    background: white;
-    border-bottom: 1px solid var(--border-color);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 2rem;
+h3{
+  margin-top:15px;
 }
 
-.content-area {
-    padding: 2rem;
-    overflow-y: auto;
-    background: #f1f5f9;
-    height: 100%;
+/* INPUTS */
+input,select{
+  width:100%;
+  padding:12px;
+  margin-top:8px;
+  border-radius:8px;
+  border:none;
+  background:#1f2937;
+  color:white;
+  outline:none;
 }
 
-.grid-container {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 1.5rem;
-    margin-top: 2rem;
+/* BUTTONS */
+.btn-group{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin-top:15px;
 }
 
-/* THE BOLT "CARD" LOOK */
-.card {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 16px;
-    border: 1px solid var(--border-color);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+button{
+  padding:12px;
+  border:none;
+  border-radius:8px;
+  background:#22d3ee;
+  font-weight:bold;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+button:hover{
+  background:#06b6d4;
+}
+
+button:active{
+  transform:scale(0.96);
+}
+
+/* OUTPUT CARD */
+#output{
+  min-height:150px;
+}
+
+/* MATCH SCORE HIGHLIGHT */
+#output h3:first-of-type{
+  color:#4ade80;
+  font-size:20px;
+}
+
+/* MISSING SKILLS */
+#output p[style]{
+  font-weight:bold;
+}
+
+/* PROGRESS BAR */
+progress{
+  width:100%;
+  height:18px;
+  border-radius:10px;
+  overflow:hidden;
+}
+
+progress::-webkit-progress-bar{
+  background:#1f2937;
+}
+
+progress::-webkit-progress-value{
+  background:#22d3ee;
+  border-radius:10px;
+}
+
+/* CHATBOX */
+.chatbox{
+  height:220px;
+  overflow-y:auto;
+  background:#020617;
+  padding:12px;
+  border-radius:10px;
+  margin-bottom:10px;
+  font-size:14px;
+}
+
+/* CHAT STYLING */
+.chatbox p{
+  margin:6px 0;
+}
+
+.chatbox p b{
+  color:#22d3ee;
+}
+
+/* DIFFERENT MESSAGE STYLES */
+.chatbox p:nth-child(odd){
+  color:#cbd5f5;
+}
+
+.chatbox p:nth-child(even){
+  color:#a7f3d0;
+}
+
+/* SCROLLBAR */
+.chatbox::-webkit-scrollbar{
+  width:6px;
+}
+
+.chatbox::-webkit-scrollbar-thumb{
+  background:#22d3ee;
+  border-radius:10px;
+}
+
+/* TRENDING SKILLS */
+#trending{
+  list-style:none;
+  padding:0;
+  margin-top:10px;
+}
+
+#trending li{
+  background:#1f2937;
+  margin:6px 0;
+  padding:10px;
+  border-radius:8px;
+  transition:0.3s;
+}
+
+#trending li:hover{
+  background:#374151;
+  transform:translateX(5px);
+}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .container{
+    flex-direction:column;
+    align-items:center;
+  }
+
+  .card{
+    width:90%;
+  }
+
+  .result-card{
+    width:90%;
+  }
 }
