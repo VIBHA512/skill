@@ -183,7 +183,13 @@ progress::-webkit-progress-value{
   background:#374151;
   transform:translateX(5px);
 }
+.tab-btn {
+  @apply px-6 py-2 mx-2 rounded-full bg-gray-200 text-gray-700 font-semibold transition;
+}
 
+.tab-btn.active {
+  @apply bg-blue-600 text-white;
+}
 /* RESPONSIVE */
 @media(max-width:768px){
   .container{
