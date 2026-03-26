@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard - Skill Bridge</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <h2>SkillBridge AI 🚀</h2>
+  <p>Your AI-powered career companion</p>
+</section>
+
+<div class="container">
+
+  <!-- LEFT PANEL -->
+  <div class="left-panel">
+
+    <h3>Enter Skills</h3>
+    <input type="text" id="skillsInput" placeholder="Python, HTML, ML">
+
+    <h3>Select Career</h3>
+    <select id="career">
+      <option>AI Engineer</option>
+      <option>Web Developer</option>
+      <option>Data Scientist</option>
+      <option>Cybersecurity Analyst</option>
+    </select>
+
+    <h3>Upload Resume</h3>
+    <input type="file" id="resumeInput">
+    <button id="uploadBtn">Extract Skills</button>
+
+    <h3>Soft Skills</h3>
+    <input type="text" id="softSkills" placeholder="Communication, Leadership">
+
+    <button id="analyzeBtn">Analyze Skill Gap</button>
+    <button id="recommendBtn">Recommend Career</button>
+
+  </div>
+
+  <!-- MIDDLE PANEL -->
+  <div class="middle-panel">
+
+    <!-- SCORE CARD -->
+    <div class="result-card">
+      <h3>📊 Scores</h3>
+      <p>Technical: <span id="techScore">0%</span></p>
+      <p>Soft Skills: <span id="softScore">0%</span></p>
+      <p>Overall: <span id="overallScore">0%</span></p>
+
+      <div class="progress-bar">
+        <div id="progressFill"></div>
+      </div>
+    </div>
+
+    <!-- CAREER -->
+    <div class="result-card">
+      <h3>🎯 Recommended Career</h3>
+      <p id="careerResult">--</p>
+    </div>
+
+    <!-- SKILLS -->
+    <div class="result-card">
+      <h3>✅ Your Skills</h3>
+      <p id="yourSkills"></p>
+    </div>
+
+    <!-- MISSING -->
+    <div class="result-card">
+      <h3>📌 Missing Skills</h3>
+      <p id="missingSkills"></p>
+    </div>
+
+    <!-- COURSES -->
+    <div class="result-card">
+      <h3>📚 Courses</h3>
+      <ul id="courses"></ul>
+    </div>
+
+    <!-- ROADMAP -->
+    <div class="result-card">
+      <h3>🗺 Roadmap</h3>
+      <ol id="roadmap"></ol>
+    </div>
+
+    <!-- TRENDING -->
+    <div class="result-card">
+      <h3>🔥 Trending Skills</h3>
+      <p>AI, Cloud, Cybersecurity, Data Science</p>
+    </div>
+
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+
+    <h3>🤖 AI Chatbot</h3>
+
+    <div class="chat-display" id="chatOutput"></div>
+
+    <div class="chat-box">
+      <input type="text" id="chatInput" placeholder="Ask about careers...">
+      <button id="chatBtn">Send</button>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- SCRIPT -->
+<script type="module">
+
+// 🎯 SKILL DATA
+const careerSkills = {
+  "AI Engineer": ["python", "machine learning", "deep learning", "nlp"],
+  "Web Developer": ["html", "css", "javascript", "react"],
+  "Data Scientist": ["python", "sql", "statistics"],
+  "Cybersecurity Analyst": ["networking", "linux", "security"]
+};
+
+// 📚 COURSE DATA
+const courseData = {
+  "python": "Python Course - Coursera",
+  "machine learning": "ML by Andrew Ng",
+  "html": "HTML - freeCodeCamp",
+  "css": "CSS - freeCodeCamp",
+  "javascript": "JS - freeCodeCamp",
+  "react": "React - Udemy",
+  "sql": "SQL Course",
+  "networking": "Networking Basics"
+};
+
+// 🎯 ANALYZE
+document.getElementById("analyzeBtn").addEventListener("click", () => {
+
+  const skillsInput = document.getElementById("skillsInput").value.toLowerCase();
+  const career = document.getElementById("career").value;
+
+  const userSkills = skillsInput.split(",").map(s => s.trim());
+  const required = careerSkills[career];
+
+  const matched = required.filter(skill => userSkills.includes(skill));
+  const missing = required.filter(skill => !userSkills.includes(skill));
+
+  const techScore = Math.floor((matched.length / required.length) * 100);
+  const softScore = Math.floor(Math.random() * 50 + 50);
+  const overall = Math.floor((techScore + softScore) / 2);
+
+  // UI UPDATE
+  document.getElementById("techScore").innerText = techScore + "%";
+  document.getElementById("softScore").innerText = softScore + "%";
+  document.getElementById("overallScore").innerText = overall + "%";
+
+  document.getElementById("progressFill").style.width = overall + "%";
+
+  document.getElementById("yourSkills").innerText = userSkills.join(", ");
+  document.getElementById("missingSkills").innerText = missing.join(", ");
+
+  // COURSES
+  const courseList = document.getElementById("courses");
+  courseList.innerHTML = "";
+  missing.forEach(skill => {
+    if (courseData[skill]) {
+      courseList.innerHTML += `<li>${courseData[skill]}</li>`;
+    }
+  });
+
+  // ROADMAP
+  const roadmap = document.getElementById("roadmap");
+  roadmap.innerHTML = "";
+  missing.forEach((skill, i) => {
+    roadmap.innerHTML += `<li>Week ${i+1}: Learn ${skill}</li>`;
+  });
+
+});
+
+// 💡 RECOMMEND
+document.getElementById("recommendBtn").addEventListener("click", () => {
+
+  const skills = document.getElementById("skillsInput").value.toLowerCase();
+
+  let career = "Web Developer 💻";
+
+  if (skills.includes("python")) career = "Data Scientist 📊";
+  if (skills.includes("ml")) career = "AI Engineer 🤖";
+  if (skills.includes("html")) career = "Frontend Developer 🎨";
+
+  document.getElementById("careerResult").innerText = career;
+
+});
+
+// 📄 RESUME
+document.getElementById("uploadBtn").addEventListener("click", () => {
+  const file = document.getElementById("resumeInput").files[0];
+
+  if (!file) {
+    alert("Upload resume first");
+    return;
+  }
+
+  alert("Resume analyzed successfully ✅");
+});
+
+// 🤖 CHATBOT
+document.getElementById("chatBtn").addEventListener("click", () => {
+
+  const input = document.getElementById("chatInput").value;
+  let reply = "Hey, I can guide you 🚀";
+
+  if (input.includes("career")) reply = "Try Data Science or Web Dev!";
+  if (input.includes("python")) reply = "Go for AI / Data roles";
+  if (input.includes("web")) reply = "Frontend or Full Stack is best";
+
+  document.getElementById("chatOutput").innerHTML += `
+    <p><b>You:</b> ${input}</p>
+    <p><b>AI:</b> ${reply}</p>
+  `;
+
+});
+
+</script>
+
+</body>
+</html>
